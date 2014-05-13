@@ -3,7 +3,7 @@
 
 $ename = 'DB';
 $eport = 5432;
-$confpath = '/var/www/config.php';
+$confpath = '/var/www/ttrss/config.php';
 
 // check DB_NAME, which will be set automatically for a linked "db" container
 if (!env($ename . '_PORT', '')) {
@@ -34,12 +34,12 @@ if (!dbcheck($config)) {
     $super['DB_NAME'] = null;
     $super['DB_USER'] = env($ename . '_ENV_USER', 'docker');
     $super['DB_PASS'] = env($ename . '_ENV_PASS', $super['DB_USER']);
-    
+
     $pdo = dbconnect($super);
     $pdo->exec('CREATE ROLE ' . ($config['DB_USER']) . ' WITH LOGIN PASSWORD ' . $pdo->quote($config['DB_PASS']));
     $pdo->exec('CREATE DATABASE ' . ($config['DB_NAME']) . ' WITH OWNER ' . ($config['DB_USER']));
     unset($pdo);
-    
+
     if (dbcheck($config)) {
         echo 'Database login created and confirmed' . PHP_EOL;
     } else {
@@ -73,11 +73,11 @@ file_put_contents($confpath, $contents);
 function env($name, $default = null)
 {
     $v = getenv($name) ?: $default;
-    
+
     if ($v === null) {
         error('The env ' . $name . ' does not exist');
     }
-    
+
     return $v;
 }
 

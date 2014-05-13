@@ -1,5 +1,6 @@
 FROM ubuntu
-MAINTAINER Christian Lück <christian@lueck.tv>
+# Based on work of Christian Lück <christian@lueck.tv>
+MAINTAINER Andreas Löffler <andy@x86dev.com>
 
 RUN DEBIAN_FRONTEND=noninteractive apt-get update && apt-get install -y \
   nginx git supervisor php5-fpm php5-cli php5-curl php5-gd php5-json \
@@ -11,11 +12,27 @@ ADD ttrss.nginx.conf /etc/nginx/sites-available/ttrss
 RUN ln -s /etc/nginx/sites-available/ttrss /etc/nginx/sites-enabled/ttrss
 RUN rm /etc/nginx/sites-enabled/default
 
+# patch php5-fpm configuration so that it does not daemonize itself. This is
+# needed because supervisord can watch its state
+RUN sed -i -e "s/;daemonize\s*=\s*yes/daemonize = no/g" /etc/php5/fpm/php-fpm.conf
+
+# patch the php-fpm's listening method to _always_ use a unix socket
+# note: if not done correctly this will result in a "502 Bad Gateway" error
+#       (see /var/log/nginx/error.log for more information then)
+RUN sed -i -e "s/listen\s*=.*/listen = \/var\/run\/php5-fpm.sock/g" /etc/php5/fpm/pool.d/www.conf
+
 # install ttrss and patch configuration
-RUN git clone https://github.com/gothfox/Tiny-Tiny-RSS.git /var/www
-WORKDIR /var/www
+RUN git clone https://github.com/gothfox/Tiny-Tiny-RSS.git /var/www/ttrss
+WORKDIR /var/www/ttrss
 RUN cp config.php-dist config.php
 RUN sed -i -e "/'SELF_URL_PATH'/s/ '.*'/ 'http:\/\/localhost\/'/" config.php
+
+# install feedly theme
+RUN git clone https://github.com/levito/tt-rss-feedly-theme.git
+RUN ln -s /var/www/ttrss/tt-rss-feedly-theme/feedly /var/www/ttrss/themes/feedly
+RUN ln -s /var/www/ttrss/tt-rss-feedly-theme/feedly.css /var/www/ttrss/themes/feedly.css
+
+# apply ownership of ttrss + addons to www-data
 RUN chown www-data:www-data -R /var/www
 
 # expose only nginx HTTP port
@@ -30,4 +47,3 @@ ENV DB_PASS ttrss
 ADD configure-db.php /configure-db.php
 ADD supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 CMD php /configure-db.php && supervisord -c /etc/supervisor/conf.d/supervisord.conf
-

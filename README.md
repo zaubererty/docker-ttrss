@@ -1,5 +1,12 @@
 # docker-ttrss
 
+Note: This Dockerfile is a modified version of https://github.com/clue/docker-ttrss.git
+which adds some features, plugins and themes I wanted to have in my own tt-rss setup. 
+
+Tiny Tiny RSS' root now is in the subdirectory ttrss, e.g. http://<yourhost>/ttrss
+
+Feel free to tweak this further to your likings.
+
 This docker image allows you to run the [Tiny Tiny RSS](http://tt-rss.org) feed reader.
 Keep your feed history to yourself and access your RSS and atom feeds from everywhere.
 You can access it through an easy to use webinterface on your desktop, your mobile browser
@@ -20,7 +27,7 @@ And because this docker image is available as a [trusted build on the docker ind
 using it is as simple as launching this Tiny Tiny RSS installation linked to your fresh database:
 
 ```bash
-$ docker run -d --link $DB:db -p 80:80 clue/ttrss
+$ docker run -d --link $DB:db -p 80:80 --name ttrss <this-image>
 ```
 
 Running this command for the first time will download the image automatically.
@@ -57,7 +64,7 @@ any, as long as is exposes its database port (5432) to the outside.
 Example:
 
 ```bash
-$ sudo docker run -d --name=tinystore nornagon/postgres
+$ sudo docker run -d --name=ttrss-data nornagon/postgres
 ```
 
 #### Testing ttrss in foreground
@@ -67,7 +74,7 @@ This is particular useful for your initial database setup, as errors get reporte
 the console and further execution will halt.
 
 ```bash
-$ sudo docker run -it --link tinystore:db -p 80:80 clue/ttrss
+$ sudo docker run -it --link ttrss-data:db -p 80:80 --name ttrss <this-image>
 ```
 
 ##### Database configuration
@@ -103,5 +110,5 @@ Remaining arguments can be passed just like before, the following is the recomme
 minimum:
 
 ```bash
-$ sudo docker run -d --link tinystore:db -p 80:80 clue/ttrss
+$ sudo docker run -d --link ttrss-data:db -p 80:80 --name ttrss <this-image>
 ```
