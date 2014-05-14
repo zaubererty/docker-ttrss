@@ -25,38 +25,14 @@ $config['DB_NAME'] = env($ename . '_NAME', 'ttrss');
 $config['DB_USER'] = env($ename . '_USER', $config['DB_NAME']);
 $config['DB_PASS'] = env($ename . '_PASS', $config['DB_USER']);
 
-if (!dbcheck($config)) {
-    echo 'Database login failed, trying to create...' . PHP_EOL;
-    // superuser account to create new database and corresponding user account
-    //   username (SU_USER) can be supplied or defaults to "docker"
-    //   password (SU_PASS) can be supplied or defaults to username
-
-    $super = $config;
-
-    $super['DB_NAME'] = null;
-    $super['DB_USER'] = env($ename . '_ENV_USER', 'docker');
-    $super['DB_PASS'] = env($ename . '_ENV_PASS', $super['DB_USER']);
-
-    $pdo = dbconnect($super);
-    $pdo->exec('CREATE ROLE ' . ($config['DB_USER']) . ' WITH LOGIN PASSWORD ' . $pdo->quote($config['DB_PASS']));
-    $pdo->exec('CREATE DATABASE ' . ($config['DB_NAME']) . ' WITH OWNER ' . ($config['DB_USER']));
-    unset($pdo);
-
-    if (dbcheck($config)) {
-        echo 'Database login created and confirmed' . PHP_EOL;
-    } else {
-        error('Database login failed, trying to create login failed as well');
-    }
-}
-
 $pdo = dbconnect($config);
 try {
-    $pdo->query('SELECT 1 FROM ttrss_feeds');
+    $pdo->query('SELECT 1 FROM plugin_mobilize_feeds');
     // reached this point => table found, assume db is complete
 }
 catch (PDOException $e) {
-    echo 'Database table not found, applying schema... ' . PHP_EOL;
-    $schema = file_get_contents('schema/ttrss_schema_' . $config['DB_TYPE'] . '.sql');
+    echo 'Database table for mobilize plugin not found, applying schema... ' . PHP_EOL;
+    $schema = file_get_contents('plugins/mobilize/ttrss-plugin-mobilize.pgsql');
     $schema = preg_replace('/--(.*?);/', '', $schema);
     $schema = preg_replace('/[\r\n]/', ' ', $schema);
     $schema = trim($schema, ' ;');

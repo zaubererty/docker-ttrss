@@ -27,10 +27,14 @@ WORKDIR /var/www/ttrss
 RUN cp config.php-dist config.php
 RUN sed -i -e "/'SELF_URL_PATH'/s/ '.*'/ 'http:\/\/localhost\/'/" config.php
 
-# install feedly theme
+# install Feedly theme
 RUN git clone https://github.com/levito/tt-rss-feedly-theme.git
 RUN ln -s /var/www/ttrss/tt-rss-feedly-theme/feedly /var/www/ttrss/themes/feedly
 RUN ln -s /var/www/ttrss/tt-rss-feedly-theme/feedly.css /var/www/ttrss/themes/feedly.css
+
+# install ttrss-mobilize plugin
+RUN git clone https://github.com/sepich/tt-rss-mobilize.git /var/www/ttrss/plugins/mobilize
+ADD ttrss-plugin-mobilize.pgsql /var/www/ttrss/plugins/mobilize/ttrss-plugin-mobilize.pgsql
 
 # apply ownership of ttrss + addons to www-data
 RUN chown www-data:www-data -R /var/www
@@ -44,6 +48,9 @@ ENV DB_USER ttrss
 ENV DB_PASS ttrss
 
 # always re-configure database with current ENV when RUNning container, then monitor all services
+ADD run.sh /run.sh
+ADD utils.php /utils.php
 ADD configure-db.php /configure-db.php
+ADD configure-plugin-mobilize.php /configure-plugin-mobilize.php
 ADD supervisord.conf /etc/supervisor/conf.d/supervisord.conf
-CMD php /configure-db.php && supervisord -c /etc/supervisor/conf.d/supervisord.conf
+CMD sh /run.sh && supervisord -c /etc/supervisor/conf.d/supervisord.conf
