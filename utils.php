@@ -1,4 +1,4 @@
-<?
+<?php
 
 function env($name, $default = null)
 {
