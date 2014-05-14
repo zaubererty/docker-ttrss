@@ -36,6 +36,9 @@ RUN ln -s /var/www/ttrss/tt-rss-feedly-theme/feedly.css /var/www/ttrss/themes/fe
 RUN git clone https://github.com/sepich/tt-rss-mobilize.git /var/www/ttrss/plugins/mobilize
 ADD ttrss-plugin-mobilize.pgsql /var/www/ttrss/plugins/mobilize/ttrss-plugin-mobilize.pgsql
 
+# patch ttrss-mobilize plugin for getting it to work
+RUN sed -i -e "s/<? /<?php/" /var/www/ttrss/plugins/mobilize/m.php
+
 # apply ownership of ttrss + addons to www-data
 RUN chown www-data:www-data -R /var/www
 
