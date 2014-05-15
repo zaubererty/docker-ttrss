@@ -37,7 +37,7 @@ RUN git clone https://github.com/sepich/tt-rss-mobilize.git /var/www/ttrss/plugi
 ADD ttrss-plugin-mobilize.pgsql /var/www/ttrss/plugins/mobilize/ttrss-plugin-mobilize.pgsql
 
 # patch ttrss-mobilize plugin for getting it to work
-RUN sed -i -e "s/<? /<?php/" /var/www/ttrss/plugins/mobilize/m.php
+RUN sed -i -e "s/<? */<?php/" /var/www/ttrss/plugins/mobilize/m.php
 
 # apply ownership of ttrss + addons to www-data
 RUN chown www-data:www-data -R /var/www
