@@ -1,13 +1,15 @@
 # docker-ttrss
 
-Note: This Dockerfile is a modified version of https://github.com/clue/docker-ttrss.git
-which adds some features, plugins and themes I wanted to have in my own tt-rss setup. 
+This Dockerfile installs Tiny Tiny RSS with the following features:
 
-Tiny Tiny RSS' root now is in the subdirectory ttrss, e.g. http://<yourhost>/ttrss
+- Integrated [Feedly theme](https://github.com/levito/tt-rss-feedly-theme)
+- Integrated [mobilize plugin](https://github.com/sepich/tt-rss-mobilize) for using Readability, Instapaper + Google Mobilizer
+- Self-signed 2048-bit RSA TLS certificate for accessing Tiny Tiny RSS via https
+- Originally was based on [clue/docker-ttrss.git](https://github.com/clue/docker-ttrss)
 
 Feel free to tweak this further to your likings.
 
-This docker image allows you to run the [Tiny Tiny RSS](http://tt-rss.org) feed reader.
+This docker image allows you to run the [Tiny Tiny RSS](http://www.tt-rss.org) feed reader.
 Keep your feed history to yourself and access your RSS and atom feeds from everywhere.
 You can access it through an easy to use webinterface on your desktop, your mobile browser
 or using one of available apps.
@@ -23,20 +25,20 @@ Just start up a new database container:
 $ DB=$(docker run -d nornagon/postgres)
 ```
 
-And because this docker image is available as a [trusted build on the docker index](https://index.docker.io/u/clue/ttrss/),
+And because this docker image is available as a [trusted build on the docker index](https://index.docker.io/u/x86dev/docker-ttrss/),
 using it is as simple as launching this Tiny Tiny RSS installation linked to your fresh database:
 
 ```bash
-$ docker run -d --link $DB:db -p 80:80 --name ttrss <this-image>
+$ docker run -d --link $DB:db -p 443:443 --name ttrss <this-image>
 ```
 
 Running this command for the first time will download the image automatically.
 
 ## Accessing your webinterface
 
-The above example exposes the Tiny Tiny RSS webinterface on port 80, so that you can browse to:
+The above example exposes the Tiny Tiny RSS webinterface on port 443 (https), so that you can browse to:
 
-http://localhost/
+https://<yourhost>/ttrss
 
 The default login credentials are:
 
@@ -74,7 +76,7 @@ This is particular useful for your initial database setup, as errors get reporte
 the console and further execution will halt.
 
 ```bash
-$ sudo docker run -it --link ttrss-data:db -p 80:80 --name ttrss <this-image>
+$ sudo docker run -it --link ttrss-data:db -p 443:443 --name ttrss <this-image>
 ```
 
 ##### Database configuration
@@ -110,5 +112,5 @@ Remaining arguments can be passed just like before, the following is the recomme
 minimum:
 
 ```bash
-$ sudo docker run -d --link ttrss-data:db -p 80:80 --name ttrss <this-image>
+$ sudo docker run -d --link ttrss-data:db -p 443:443 --name ttrss <this-image>
 ```

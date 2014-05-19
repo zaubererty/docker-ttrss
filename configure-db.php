@@ -1,7 +1,7 @@
 #!/usr/bin/env php
 <?php
 
-include '/utils.php';
+include '/root/utils.php';
 
 $ename = 'DB';
 $eport = 5432;
@@ -52,6 +52,7 @@ if (!dbcheck($config)) {
 $pdo = dbconnect($config);
 try {
     $pdo->query('SELECT 1 FROM ttrss_feeds');
+    echo 'Connection to database successful';
     // reached this point => table found, assume db is complete
 }
 catch (PDOException $e) {

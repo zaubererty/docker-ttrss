@@ -1,7 +1,7 @@
 #!/usr/bin/env php
 <?php
 
-include '/utils.php';
+include '/root/utils.php';
 
 $ename = 'DB';
 $eport = 5432;

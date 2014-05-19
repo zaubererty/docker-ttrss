@@ -1,10 +1,10 @@
-FROM ubuntu
-# Based on work of Christian Lück <christian@lueck.tv>
+FROM phusion/baseimage
+# Initially was based on work of Christian Lück <christian@lueck.tv>
 MAINTAINER Andreas Löffler <andy@x86dev.com>
 
 RUN DEBIAN_FRONTEND=noninteractive apt-get update && apt-get install -y \
-  nginx git supervisor php5-fpm php5-cli php5-curl php5-gd php5-json \
-  php5-pgsql
+  nginx git ca-certificates php5-fpm php5-cli php5-curl php5-gd php5-json \
+  php5-pgsql 
 # php5-mysql
 
 # add ttrss as the only nginx site
@@ -13,7 +13,7 @@ RUN ln -s /etc/nginx/sites-available/ttrss /etc/nginx/sites-enabled/ttrss
 RUN rm /etc/nginx/sites-enabled/default
 
 # patch php5-fpm configuration so that it does not daemonize itself. This is
-# needed because supervisord can watch its state
+# needed so that runit can watch its state and restart it if it crashes etc.
 RUN sed -i -e "s/;daemonize\s*=\s*yes/daemonize = no/g" /etc/php5/fpm/php-fpm.conf
 
 # patch the php-fpm's listening method to _always_ use a unix socket
@@ -51,9 +51,20 @@ ENV DB_USER ttrss
 ENV DB_PASS ttrss
 
 # always re-configure database with current ENV when RUNning container, then monitor all services
-ADD run.sh /run.sh
-ADD utils.php /utils.php
-ADD configure-db.php /configure-db.php
-ADD configure-plugin-mobilize.php /configure-plugin-mobilize.php
-ADD supervisord.conf /etc/supervisor/conf.d/supervisord.conf
-CMD sh /run.sh && supervisord -c /etc/supervisor/conf.d/supervisord.conf
+## @todo pack the scripts to a .zip, ADD this and RUN it in setup.sh. Later.
+ADD utils.php /root/utils.php
+ADD configure-db.php /root/configure-db.php
+ADD configure-plugin-mobilize.php /root/configure-plugin-mobilize.php
+
+RUN mkdir /etc/service/nginx
+ADD service-nginx.sh /etc/service/nginx/run
+
+RUN mkdir /etc/service/php5-fpm
+ADD service-php5-fpm.sh /etc/service/php5-fpm/run
+
+RUN mkdir /etc/service/ttrss-update
+ADD service-ttrss-update.sh /etc/service/ttrss-update/run
+
+ADD 10_ttrss.sh /etc/my_init.d/10_ttrss.sh
+CMD /sbin/my_init
+EXPOSE 22
