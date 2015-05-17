@@ -74,4 +74,4 @@ ADD service-ttrss-update.sh /etc/service/ttrss-update/run
 
 ADD 10_ttrss.sh /etc/my_init.d/10_ttrss.sh
 CMD /sbin/my_init
-EXPOSE 22
+
