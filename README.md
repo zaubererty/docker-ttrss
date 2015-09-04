@@ -29,8 +29,7 @@ Just start up a new database container:
 DB=$(docker run -d nornagon/postgres)
 ```
 
-And because this docker image is available as a [trusted build on the docker index](https://index.docker.io/u/x86dev/docker-ttrss/),
-using it is as simple as launching this TT-RSS installation linked to your fresh database:
+Next, run the actual TT-RSS instance by doing a:
 
 ```bash
 docker run -d --link $DB:db -p 80:80 --name ttrss x86dev/docker-ttrss
@@ -71,7 +70,7 @@ database instance and configuration you're relying on.
 Also, this makes this container quite disposable, as it doesn't store any sensitive
 information at all.
 
-#### Starting a database instance
+### Starting a database instance
 
 This container requires a PostgreSQL database instance. You're free to pick (or build)
 any, as long as is exposes its database port (5432) to the outside.
@@ -82,7 +81,7 @@ Example:
 docker run -d --name=ttrss-data nornagon/postgres
 ```
 
-#### Testing TT-RSS in foreground
+### Testing TT-RSS in foreground
 
 For testing purposes it's recommended to initially start this container in foreground.
 This is particular useful for your initial database setup, as errors get reported to
@@ -92,7 +91,7 @@ the console and further execution will halt.
 docker run -it --link ttrss-data:db --name ttrss x86dev/docker-ttrss
 ```
 
-##### Database configuration
+### Database configuration
 
 Whenever your run TT-RSS, it will check your database setup. It assumes the following
 default configuration, which can be changed by passing the following additional arguments:
@@ -103,9 +102,9 @@ default configuration, which can be changed by passing the following additional 
 -e DB_PASS=ttrss
 ```
 
-##### Database superuser
+### Database user
 
-When you run TT-RSS, it will check your database setup. If it can not connect using the above
+When you run TT-RSS it will check your database setup. If it can not connect using the above
 configuration, it will automatically try to create a new database and user.
 
 For this to work, it will need a superuser (root) account that is permitted to create a new database
@@ -117,7 +116,7 @@ following additional arguments:
 -e DB_ENV_PASS=docker
 ```
 
-#### Running TT-RSS daemonized
+### Running TT-RSS daemonized
 
 Once you've confirmed everything works in the foreground, you can start your container
 in the background by replacing the `-it` argument with `-d` (daemonize).
@@ -127,8 +126,9 @@ minimum:
 ```bash
 docker run -d --link ttrss-data:db --name ttrss x86dev/docker-ttrss
 ```
+## Useful stuff to know
 
-##### Backing up / moving to another server
+### Backing up / moving to another server
 
 Decided to back up your data container and/or move to another server? Here's how
 you do it:
@@ -153,3 +153,18 @@ After that you can run that imported container again the usual way with:
 ```bash
 docker run -d <IMAGE ID>
 ```
+
+### Automatic updates
+
+When running this docker container you don't need to worry anymore how and when to
+update TT-RSS. Since TT-RSS has a so-called "rolling release" model since some time
+(which essentially means that there won't be any specific versions like 1.0, 1.1 etc),
+this container takes the burden any checks for updates of TT-RSS and the accompanied
+plugins/themes every day via a cron job (see `/etc/cron.daily/update-ttrss.sh`).
+
+### Want to contribute?
+
+You think you have something which absolutely must be part of this container, implemented
+a cool new feature or fixed some nasty bug? Let me know and send me a git pull request.
+
+The repository can be found [here](https://github.com/x86dev/docker-ttrss).
