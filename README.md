@@ -9,6 +9,8 @@ This Dockerfile installs Tiny Tiny RSS (TT-RSS) with the following features:
 - Optional: Self-signed 2048-bit RSA TLS certificate for accessing TT-RSS via https
 - Originally was based on [clue/docker-ttrss](https://github.com/clue/docker-ttrss)
 
+A ready-to-use Docker image is available at [Docker Hub](https://hub.docker.com/r/x86dev/docker-ttrss/)
+
 Feel free to tweak this further to your likings.
 
 This docker image allows you to run the [Tiny Tiny RSS](http://www.tt-rss.org) feed reader.
@@ -16,7 +18,7 @@ Keep your feed history to yourself and access your RSS and atom feeds from every
 You can access it through an easy to use webinterface on your desktop, your mobile browser
 or using one of available apps.
 
-'''Note: All commands must be executed as root!'''
+**Note: All commands must be executed as root!**
 
 ## Quickstart
 
@@ -26,13 +28,13 @@ steps in more detail. So let's start.
 Just start up a new database container:
 
 ```bash
-DB=$(docker run -d nornagon/postgres)
+# DB=$(docker run -d nornagon/postgres)
 ```
 
 Next, run the actual TT-RSS instance by doing a:
 
 ```bash
-docker run -d --link $DB:db -p 80:80 --name ttrss x86dev/docker-ttrss
+# docker run -d --link $DB:db -p 80:80 --name ttrss x86dev/docker-ttrss
 ```
 
 Running this command for the first time will download the image automatically.
@@ -78,7 +80,7 @@ any, as long as is exposes its database port (5432) to the outside.
 Example:
 
 ```bash
-docker run -d --name=ttrss-data nornagon/postgres
+# docker run -d --name=ttrss-data nornagon/postgres
 ```
 
 ### Testing TT-RSS in foreground
@@ -88,7 +90,7 @@ This is particular useful for your initial database setup, as errors get reporte
 the console and further execution will halt.
 
 ```bash
-docker run -it --link ttrss-data:db --name ttrss x86dev/docker-ttrss
+# docker run -it --link ttrss-data:db --name ttrss x86dev/docker-ttrss
 ```
 
 ### Database configuration
@@ -124,7 +126,7 @@ Remaining arguments can be passed just like before, the following is the recomme
 minimum:
 
 ```bash
-docker run -d --link ttrss-data:db --name ttrss x86dev/docker-ttrss
+# docker run -d --link ttrss-data:db --name ttrss x86dev/docker-ttrss
 ```
 ## Useful stuff to know
 
@@ -136,22 +138,22 @@ you do it:
 On the old server, stop your TT-RSS container and then do:
 
 ```bash
-docker commit -m "Backup of XXX" <CONTAINER NAME>
-docker save <IMAGE CREATED BY COMMIT> > /tmp/<filename>.tar
+# docker commit -m "Backup of XXX" <CONTAINER NAME>
+# docker save <IMAGE CREATED BY COMMIT> > /tmp/<filename>.tar
 ```
 
 On the new server, copy the created .tar file from the old server and
 import the file with:
 
 ```bash
-docker load < <filename.tar>
+# docker load < <filename.tar>
 ```
 
 This will load the container from the .tar file into Docker's local registry.
 After that you can run that imported container again the usual way with:
 
 ```bash
-docker run -d <IMAGE ID>
+# docker run -d <IMAGE ID>
 ```
 
 ### Automatic updates
