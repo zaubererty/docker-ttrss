@@ -10,7 +10,7 @@ $conffile = $confpath . 'config.php';
 $ename = 'DB';
 $eport = 5432;
 
-echo 'Configuring database for: ' $conffile . PHP_EOL;
+echo 'Configuring database for: ' . $conffile . PHP_EOL;
 
 // check DB_NAME, which will be set automatically for a linked "db" container
 if (!env($ename . '_PORT', '')) {
