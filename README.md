@@ -2,7 +2,7 @@
 
 This Dockerfile installs Tiny Tiny RSS (TT-RSS) with the following features:
 
-- '''New:''' Rolling release support: Updates TT-RSS automatically every day
+- **New:** Rolling release support: Updates TT-RSS automatically every day
 - Integrated [Feedly theme](https://github.com/levito/tt-rss-feedly-theme)
 - Integrated [Mobilize plugin](https://github.com/sepich/tt-rss-mobilize) for using Readability, Instapaper + Google Mobilizer
 - Integrated [News+ plugin](https://github.com/hrk/tt-rss-newsplus-plugin) for [News+](https://play.google.com/store/apps/details?id=com.noinnion.android.newsplus) on Android
