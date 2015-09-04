@@ -59,4 +59,4 @@ RUN apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 # start supervisord
 WORKDIR /srv
-CMD ["/srv/ttrss-start.sh"]
+CMD ["/srv/start-ttrss.sh"]
