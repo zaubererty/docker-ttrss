@@ -1,7 +1,7 @@
 #!/usr/bin/env php
 <?php
 
-include '/root/utils.php';
+include '/srv/ttrss-utils.php';
 
 $ename = 'DB';
 $eport = 5432;
@@ -32,7 +32,7 @@ try {
 }
 catch (PDOException $e) {
     echo 'Database table for mobilize plugin not found, applying schema... ' . PHP_EOL;
-    $schema = file_get_contents('plugins/mobilize/ttrss-plugin-mobilize.pgsql');
+    $schema = file_get_contents('/srv/ttrss-plugin-mobilize.pgsql');
     $schema = preg_replace('/--(.*?);/', '', $schema);
     $schema = preg_replace('/[\r\n]/', ' ', $schema);
     $schema = trim($schema, ' ;');

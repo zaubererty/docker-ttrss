@@ -1,11 +1,13 @@
 #!/usr/bin/env php
 <?php
 
-include '/root/utils.php';
+include '/srv/ttrss-utils.php';
+
+$config['TTRSS_PATH'] = '/var/www/ttrss/';
 
 $ename = 'DB';
 $eport = 5432;
-$confpath = '/var/www/ttrss/config.php';
+$confpath = $config['TTRSS_PATH'] . 'config.php';
 
 // check DB_NAME, which will be set automatically for a linked "db" container
 if (!env($ename . '_PORT', '')) {
@@ -57,7 +59,7 @@ try {
 }
 catch (PDOException $e) {
     echo 'Database table not found, applying schema... ' . PHP_EOL;
-    $schema = file_get_contents('schema/ttrss_schema_' . $config['DB_TYPE'] . '.sql');
+    $schema = file_get_contents($config['TTRSS_PATH'] . 'schema/ttrss_schema_' . $config['DB_TYPE'] . '.sql');
     $schema = preg_replace('/--(.*?);/', '', $schema);
     $schema = preg_replace('/[\r\n]/', ' ', $schema);
     $schema = trim($schema, ' ;');
