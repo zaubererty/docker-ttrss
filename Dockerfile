@@ -40,6 +40,7 @@ ADD ttrss-plugin-mobilize.pgsql         /srv/ttrss-plugin-mobilize.pgsql
 
 ADD setup-ttrss.sh                      /srv/setup-ttrss.sh
 ADD update-ttrss.sh                     /srv/update-ttrss.sh
+ADD start-ttrss.sh                      /srv/start-ttrss.sh
 
 # add updater script for rolling release model -- currently runs on a daily basis
 RUN ln -s /srv/update-ttrss.sh /etc/cron.daily/update-ttrss.sh
@@ -50,6 +51,7 @@ ADD service-nginx.conf        /etc/supervisor/conf.d/nginx.conf
 ADD service-php5-fpm.conf     /etc/supervisor/conf.d/php5.conf
 ADD service-ttrss-update.conf /etc/supervisor/conf.d/ttrss-update.conf
 
+# only run the setup once
 RUN /srv/setup-ttrss.sh
 
 # clean up
@@ -57,4 +59,4 @@ RUN apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 # start supervisord
 WORKDIR /srv
-CMD ["supervisord", "-c", "/etc/supervisor/supervisord.conf"]
+CMD ["/srv/ttrss-start.sh"]

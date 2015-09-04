@@ -3,11 +3,14 @@
 
 include '/srv/ttrss-utils.php';
 
-$config['TTRSS_PATH'] = '/var/www/ttrss/';
+if (!env('TTRSS_PATH', ''))
+    $confpath = '/var/www/ttrss/';
+$conffile = $confpath . 'config.php';
 
 $ename = 'DB';
 $eport = 5432;
-$confpath = $config['TTRSS_PATH'] . 'config.php';
+
+echo 'Configuring database for: ' $conffile . PHP_EOL;
 
 // check DB_NAME, which will be set automatically for a linked "db" container
 if (!env($ename . '_PORT', '')) {
@@ -28,7 +31,7 @@ $config['DB_USER'] = env($ename . '_USER', $config['DB_NAME']);
 $config['DB_PASS'] = env($ename . '_PASS', $config['DB_USER']);
 
 if (!dbcheck($config)) {
-    echo 'Database login failed, trying to create...' . PHP_EOL;
+    echo 'Database login failed, trying to create ...' . PHP_EOL;
     // superuser account to create new database and corresponding user account
     //   username (SU_USER) can be supplied or defaults to "docker"
     //   password (SU_PASS) can be supplied or defaults to username
@@ -54,12 +57,12 @@ if (!dbcheck($config)) {
 $pdo = dbconnect($config);
 try {
     $pdo->query('SELECT 1 FROM ttrss_feeds');
-    echo 'Connection to database successful';
+    echo 'Connection to database successful' . PHP_EOL;
     // reached this point => table found, assume db is complete
 }
 catch (PDOException $e) {
     echo 'Database table not found, applying schema... ' . PHP_EOL;
-    $schema = file_get_contents($config['TTRSS_PATH'] . 'schema/ttrss_schema_' . $config['DB_TYPE'] . '.sql');
+    $schema = file_get_contents($confpath . 'schema/ttrss_schema_' . $config['DB_TYPE'] . '.sql');
     $schema = preg_replace('/--(.*?);/', '', $schema);
     $schema = preg_replace('/[\r\n]/', ' ', $schema);
     $schema = trim($schema, ' ;');
@@ -69,8 +72,8 @@ catch (PDOException $e) {
     unset($pdo);
 }
 
-$contents = file_get_contents($confpath);
+$contents = file_get_contents($conffile);
 foreach ($config as $name => $value) {
     $contents = preg_replace('/(define\s*\(\'' . $name . '\',\s*)(.*)(\);)/', '$1"' . $value . '"$3', $contents);
 }
-file_put_contents($confpath, $contents);
+file_put_contents($conffile, $contents);
