@@ -16,6 +16,8 @@ Keep your feed history to yourself and access your RSS and atom feeds from every
 You can access it through an easy to use webinterface on your desktop, your mobile browser
 or using one of available apps.
 
+'''Note: All commands must be executed as root!'''
+
 ## Quickstart
 
 This section assumes you want to get started quickly, the following sections explain the
@@ -24,14 +26,14 @@ steps in more detail. So let's start.
 Just start up a new database container:
 
 ```bash
-$ DB=$(docker run -d nornagon/postgres)
+DB=$(docker run -d nornagon/postgres)
 ```
 
 And because this docker image is available as a [trusted build on the docker index](https://index.docker.io/u/x86dev/docker-ttrss/),
 using it is as simple as launching this TT-RSS installation linked to your fresh database:
 
 ```bash
-$ docker run -d --link $DB:db -p 80:80 --name ttrss x86dev/docker-ttrss
+docker run -d --link $DB:db -p 80:80 --name ttrss x86dev/docker-ttrss
 ```
 
 Running this command for the first time will download the image automatically.
@@ -77,7 +79,7 @@ any, as long as is exposes its database port (5432) to the outside.
 Example:
 
 ```bash
-$ sudo docker run -d --name=ttrss-data nornagon/postgres
+docker run -d --name=ttrss-data nornagon/postgres
 ```
 
 #### Testing TT-RSS in foreground
@@ -87,7 +89,7 @@ This is particular useful for your initial database setup, as errors get reporte
 the console and further execution will halt.
 
 ```bash
-$ sudo docker run -it --link ttrss-data:db --name ttrss x86dev/docker-ttrss
+docker run -it --link ttrss-data:db --name ttrss x86dev/docker-ttrss
 ```
 
 ##### Database configuration
@@ -123,7 +125,7 @@ Remaining arguments can be passed just like before, the following is the recomme
 minimum:
 
 ```bash
-$ sudo docker run -d --link ttrss-data:db --name ttrss x86dev/docker-ttrss
+docker run -d --link ttrss-data:db --name ttrss x86dev/docker-ttrss
 ```
 
 ##### Backing up / moving to another server
