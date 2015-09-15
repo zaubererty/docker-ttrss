@@ -6,7 +6,7 @@ set -e
 supervisorctl stop all
 
 # Update configuration. This is necessary for entering the current IP + PORT of the database.
-/srv/update-ttrss.sh
+/srv/update-ttrss.sh --no-start
 
 # Start supervisord.
 # This will start all other dependencies.

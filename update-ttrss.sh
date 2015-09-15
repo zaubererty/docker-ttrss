@@ -20,8 +20,8 @@ update_plugin_mobilize()
     echo "Updating: Mobilize plugin"
     ( cd ${TTRSS_PATH}/plugins/mobilize && git pull origin master )
 
-    # Patch ttrss-mobilize plugin for getting it to work
-    sed -i -e "s/<? */<?php/" ${TTRSS_PATH}/plugins/mobilize/m.php
+    # Patch ttrss-mobilize plugin for getting it to work.
+    sed -i -e "s/<?$/<?php/g" ${TTRSS_PATH}/plugins/mobilize/m.php
 }
 
 # For use with News+ on Android. Buy the Pro version -- I love it!

@@ -26,7 +26,7 @@ setup_nginx()
     fi
 
     # Configure Nginx so that is doesn't show its version number in the HTTP headers.
-    sed -i -e "s/.*server_tokens.*/server_tokens off;/g" /etc/nginx/nginx.conf
+    sed -i -e "s/.*server_tokens\s.*/server_tokens off;/g" /etc/nginx/nginx.conf
 }
 
 setup_ttrss()
