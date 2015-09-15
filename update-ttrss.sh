@@ -3,6 +3,10 @@ set -e
 
 TTRSS_PATH=/var/www/ttrss
 
+# Note: Make sure to keep the actual updater service ("ttrss-update") alive,
+#       otherwise this script will be killed and everyting goes nuts.
+TTRSS_SUPERVISORD_SERVICES="ttrss-daemon nginx php5-fpm"
+
 update_ttrss()
 {
     echo "Updating: Tiny Tiny RSS"
@@ -52,14 +56,25 @@ update_common()
 
 echo "Update: Updating rolling release ..."
 echo "Update: Stopping all ..."
-supervisorctl stop all
+
+supervisorctl stop ${TTRSS_SUPERVISORD_SERVICES}
 update_ttrss
 update_plugin_mobilize
 update_plugin_newsplus
 update_theme_feedly
 update_common
+
+echo "Update: Done."
+
 if [ "$1" != "--no-start" ]; then
     echo "Update: Starting all ..."
-    supervisorctl start all
+    supervisorctl start ${TTRSS_SUPERVISORD_SERVICES}
 fi
-echo "Update: Done."
+if [ "$1" = "--wait-exit" ]; then
+    UPDATE_WAIT_TIME=$2
+    if [ -z "$UPDATE_WAIT_TIME" ]; then
+        UPDATE_WAIT_TIME=24h # Default is to check every day (24 hours).
+    fi
+    echo "Update: Sleeping for $UPDATE_WAIT_TIME ..."
+    sleep ${UPDATE_WAIT_TIME}
+fi
