@@ -1,4 +1,4 @@
-# docker-ttrss
+﻿# docker-ttrss
 
 This Dockerfile installs Tiny Tiny RSS (TT-RSS) with the following features:
 
@@ -162,7 +162,14 @@ When running this docker container you don't need to worry anymore how and when 
 update TT-RSS. Since TT-RSS has a so-called "rolling release" model since some time
 (which essentially means that there won't be any specific versions like 1.0, 1.1 etc),
 this container takes the burden any checks for updates of TT-RSS and the accompanied
-plugins/themes every day via a cron job (see `/etc/cron.daily/update-ttrss.sh`).
+plugins/themes every day via an own update script (see `update-ttrss.sh`).
+
+By default the update script checks every 24 hours if there are updates for TT-RSS,
+the plugins or the theme(s) available. 
+
+If you want to change the update interval you just need to edit the file 
+`service-ttrss-update.conf` and change the `--wait-exit 24h` to fit your needs, whereas
+the suffix `h` stands for hours, `m` for minutes and `s` for seconds. 
 
 ### Want to contribute?
 
