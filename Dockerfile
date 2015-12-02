@@ -3,7 +3,7 @@ FROM kdelfour/supervisor-docker
 MAINTAINER Andreas Löffler <andy@x86dev.com>
 
 RUN DEBIAN_FRONTEND=noninteractive apt-get update && apt-get install -y \
-    nginx git ca-certificates php5-fpm php5-cli php5-curl php5-gd php5-json php5-pgsql
+    nginx git ca-certificates php5-fpm php5-cli php5-curl php5-gd php5-json php5-mcrypt php5-pgsql
 
 # add ttrss as the only Nginx site
 ADD ttrss-nginx.conf /etc/nginx/sites-available/ttrss
