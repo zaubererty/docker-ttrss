@@ -19,6 +19,9 @@ RUN sed -i -e "s/;daemonize\s*=\s*yes/daemonize = no/g" /etc/php5/fpm/php-fpm.co
 #       (see /var/log/nginx/error.log for more information then)
 RUN sed -i -e "s/listen\s*=.*/listen = \/var\/run\/php5-fpm.sock/g" /etc/php5/fpm/pool.d/www.conf
 
+# enable PHP5 modules
+RUN php5enmod mcrypt
+
 # expose Nginx ports
 EXPOSE 80
 EXPOSE 443
