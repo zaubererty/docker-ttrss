@@ -20,9 +20,9 @@ setup_nginx()
         chmod 600 "/etc/ssl/certs/ttrss.crt"
     else
         # Turn off SSL.
-        sed -i -e "s/listen\s*443\s*;/listen 80;/g" /etc/nginx/sites-enabled/ttrss
-        sed -i -e "s/ssl\s*on\s*;/ssl off;/g" /etc/nginx/sites-enabled/ttrss
-        sed -i -e "/\s*ssl_*/d" /etc/nginx/sites-enabled/ttrss
+        sed -i -e "s/listen\s*443\s*;/listen 80;/g" /etc/nginx/sites-available/ttrss
+        sed -i -e "s/ssl\s*on\s*;/ssl off;/g" /etc/nginx/sites-available/ttrss
+        sed -i -e "/\s*ssl_*/d" /etc/nginx/sites-available/ttrss
     fi
 
     # Configure Nginx so that is doesn't show its version number in the HTTP headers.
