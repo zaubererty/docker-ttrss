@@ -138,18 +138,17 @@ you do it:
 On the old server, stop your TT-RSS container and then do:
 
 ```bash
-# docker commit -m "Backup of XXX" <CONTAINER NAME>
-# docker save <IMAGE CREATED BY COMMIT> > /tmp/<filename>.tar
+# docker export <container name> | gzip > /tmp/<filename>.tar.gz
 ```
 
-On the new server, copy the created .tar file from the old server and
+On the new server, copy the created .tar.gz file from the old server and
 import the file with:
 
 ```bash
-# docker load < <filename.tar>
+# docker import <filename>.tar.gz
 ```
 
-This will load the container from the .tar file into Docker's local registry.
+This will import the container from the .tar.gz file into Docker's local registry.
 After that you can run that imported container again the usual way with:
 
 ```bash
