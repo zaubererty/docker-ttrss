@@ -3,7 +3,7 @@ FROM kdelfour/supervisor-docker
 MAINTAINER Andreas Löffler <andy@x86dev.com>
 
 RUN DEBIAN_FRONTEND=noninteractive apt-get update && apt-get install -y \
-    nginx git ca-certificates php5-fpm php5-cli php5-curl php5-gd php5-json php5-pgsql
+    nginx git ca-certificates php5-fpm php5-cli php5-curl php5-gd php5-json php5-mcrypt php5-pgsql
 
 # add ttrss as the only Nginx site
 ADD ttrss-nginx.conf /etc/nginx/sites-available/ttrss
@@ -18,6 +18,9 @@ RUN sed -i -e "s/;daemonize\s*=\s*yes/daemonize = no/g" /etc/php5/fpm/php-fpm.co
 # note: if not done correctly this will result in a "502 Bad Gateway" error
 #       (see /var/log/nginx/error.log for more information then)
 RUN sed -i -e "s/listen\s*=.*/listen = \/var\/run\/php5-fpm.sock/g" /etc/php5/fpm/pool.d/www.conf
+
+# enable PHP5 modules
+RUN php5enmod mcrypt
 
 # expose Nginx ports
 EXPOSE 80
