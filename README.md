@@ -71,7 +71,7 @@ Docker container running on the same machine as this one.
 
 That way you easily can integrate your TT-RSS instance with an existing domain by using a sub domain
 (e.g. https://ttrss.yourdomain.com). In combination with an official Let's Encrypt certificate you
-can get a nice A+ encryption/security rating over at [SSLabs](https://www.ssllabs.com/ssltest/).
+can get a nice A+ encryption/security rating over at [SSLLabs](https://www.ssllabs.com/ssltest/).
 
 Never run your services unencrypted!
 
