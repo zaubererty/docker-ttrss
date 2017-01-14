@@ -3,6 +3,7 @@
 This Dockerfile installs Tiny Tiny RSS (TT-RSS) with the following features:
 
 - **New:** Rolling release support: Updates TT-RSS automatically every day
+- **New:** Works nicely with jwilder's [nginx-proxy](https://github.com/jwilder/nginx-proxy), e.g. to use for Let's Encrypt SSL certificates
 - Integrated [Feedly theme](https://github.com/levito/tt-rss-feedly-theme)
 - Integrated [Mobilize plugin](https://github.com/sepich/tt-rss-mobilize) for using Readability, Instapaper + Google Mobilizer
 - Integrated [News+ plugin](https://github.com/hrk/tt-rss-newsplus-plugin) for [News+](https://play.google.com/store/apps/details?id=com.noinnion.android.newsplus) on Android
@@ -61,11 +62,24 @@ Obviously, you're recommended to change those ASAP.
 For enabling SSL/TLS support with a self-signed certificate you have to add `-e TTRSS_SSL_ENABLED=1`
 when running your TT-RSS container. Then you can access TT-RSS via: `https://<yourhost>`.
 
+The container also has been successfully tested with Let's Encrypt certificates.
+
+## Reverse proxy support
+
+A nice thing to have is jwilder's [nginx-proxy](https://github.com/jwilder/nginx-proxy) as a separate
+Docker container running on the same machine as this one.
+
+That way you easily can integrate your TT-RSS instance with an existing domain by using a sub domain
+(e.g. https://ttrss.yourdomain.com). In combination with an official Let's Encrypt certificate you
+can get a nice A+ encryption/security rating over at [SSLabs](https://www.ssllabs.com/ssltest/).
+
+Never run your services unencrypted!
+
 ## Installation walkthrough
 
 ### Running
 
-Following docker's best practices, this container does not contain its own database,
+Following Docker's best practices, this container does not contain its own database,
 but instead expects you to supply a running instance.
 While slightly more complicated at first, this gives your more freedom as to which
 database instance and configuration you're relying on.
