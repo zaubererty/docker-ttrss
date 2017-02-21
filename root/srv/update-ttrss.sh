@@ -77,7 +77,7 @@ update_plugin_feediron
 update_theme_feedly
 update_common
 
-echo "Update: Done."
+echo "Update: Done"
 
 if [ "$1" != "--no-start" ]; then
     echo "Update: Starting all ..."

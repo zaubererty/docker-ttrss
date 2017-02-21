@@ -1,7 +1,7 @@
-#!/bin/sh
+#!/usr/bin/with-contenv sh
 
 while true; do
   cd /var/www/ttrss
-  php -f /var/www/ttrss/update_daemon2.php
+  exec s6-setuidgid www-data php -f /var/www/ttrss/update_daemon2.php
   sleep 5m
 done
