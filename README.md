@@ -2,7 +2,7 @@
 
 This Dockerfile installs Tiny Tiny RSS (TT-RSS) with the following features:
 
-- **New:** Based on [Docker-Alpine](https://github.com/smebberson/docker-alpine) and [s6][nginx-proxy](http://skarnet.org/software/s6/) as the supervisor
+- **New:** Based on [Docker-Alpine](https://github.com/smebberson/docker-alpine) and [s6](http://skarnet.org/software/s6/) as the supervisor
 - **New:** Small and lightweight image size (about 100 MB)
 - Rolling release support: Updates TT-RSS automatically every day
 - Works nicely with jwilder's [nginx-proxy](https://github.com/jwilder/nginx-proxy), e.g. to use for Let's Encrypt SSL certificates
