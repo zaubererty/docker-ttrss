@@ -8,8 +8,11 @@ setup_nginx()
         TTRSS_HOST=ttrss
     fi
 
+    NGINX_CONF=/etc/nginx/nginx.conf
+
     if [ "$TTRSS_SSL_ENABLED" = "1" ]; then
         if [ ! -f "/etc/ssl/private/ttrss.key" ]; then
+            echo "Setup: Generating self-signed certificate ..."
             # Generate the TLS certificate for our Tiny Tiny RSS server instance.
             openssl req -new -newkey rsa:2048 -days 3650 -nodes -x509 \
                 -subj "/C=US/ST=World/L=World/O=$TTRSS_HOST/CN=$TTRSS_HOST" \
@@ -19,14 +22,13 @@ setup_nginx()
         chmod 600 "/etc/ssl/private/ttrss.key"
         chmod 600 "/etc/ssl/certs/ttrss.crt"
     else
+        echo "Setup: !!! WARNING !!! Turning OFF SSL/TLS !!! WARNING !!!"
+        echo "Setup: This is not recommended for a production server. You have been warned."
         # Turn off SSL.
-        sed -i -e "s/listen\s*443\s*;/listen 80;/g" /etc/nginx/sites-available/ttrss
-        sed -i -e "s/ssl\s*on\s*;/ssl off;/g" /etc/nginx/sites-available/ttrss
-        sed -i -e "/\s*ssl_*/d" /etc/nginx/sites-available/ttrss
+        sed -i -e "s/listen\s*4443\s*;/listen 8080;/g" ${NGINX_CONF}
+        sed -i -e "s/ssl\s*on\s*;/ssl off;/g" ${NGINX_CONF}
+        sed -i -e "/\s*ssl_*/d" ${NGINX_CONF}
     fi
-
-    # Configure Nginx so that is doesn't show its version number in the HTTP headers.
-    sed -i -e "s/.*server_tokens\s.*/server_tokens off;/g" /etc/nginx/nginx.conf
 }
 
 setup_ttrss()
@@ -34,10 +36,11 @@ setup_ttrss()
     TTRSS_PATH=/var/www/ttrss
 
     mkdir -p ${TTRSS_PATH}
-    git clone https://tt-rss.org/gitlab/fox/tt-rss.git ${TTRSS_PATH}
-    git clone https://github.com/sepich/tt-rss-mobilize.git ${TTRSS_PATH}/plugins/mobilize
-    git clone https://github.com/hrk/tt-rss-newsplus-plugin.git ${TTRSS_PATH}/plugins/api_newsplus
-    git clone https://github.com/levito/tt-rss-feedly-theme.git ${TTRSS_PATH}/themes/feedly-git
+    git clone --depth=1 https://tt-rss.org/gitlab/fox/tt-rss.git ${TTRSS_PATH}
+    git clone --depth=1 https://github.com/sepich/tt-rss-mobilize.git ${TTRSS_PATH}/plugins/mobilize
+    git clone --depth=1 https://github.com/hrk/tt-rss-newsplus-plugin.git ${TTRSS_PATH}/plugins/api_newsplus
+    git clone --depth=1 https://github.com/m42e/ttrss_plugin-feediron.git ${TTRSS_PATH}/plugins/feediron
+    git clone --depth=1 https://github.com/levito/tt-rss-feedly-theme.git ${TTRSS_PATH}/themes/feedly-git
 
     # Add initial config.
     cp ${TTRSS_PATH}/config.php-dist ${TTRSS_PATH}/config.php

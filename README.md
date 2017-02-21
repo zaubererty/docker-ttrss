@@ -2,9 +2,12 @@
 
 This Dockerfile installs Tiny Tiny RSS (TT-RSS) with the following features:
 
-- **New:** Rolling release support: Updates TT-RSS automatically every day
-- **New:** Works nicely with jwilder's [nginx-proxy](https://github.com/jwilder/nginx-proxy), e.g. to use for Let's Encrypt SSL certificates
+- **New:** Based on [Docker-Alpine](https://github.com/smebberson/docker-alpine) and [s6][nginx-proxy](http://skarnet.org/software/s6/) as the supervisor
+- **New:** Small and lightweight image size (about 100 MB)
+- Rolling release support: Updates TT-RSS automatically every day
+- Works nicely with jwilder's [nginx-proxy](https://github.com/jwilder/nginx-proxy), e.g. to use for Let's Encrypt SSL certificates
 - Integrated [Feedly theme](https://github.com/levito/tt-rss-feedly-theme)
+- **New:** Integrated [FeedIron plugin](https://github.com/m42e/ttrss_plugin-feediron) to get modify feeds
 - Integrated [Mobilize plugin](https://github.com/sepich/tt-rss-mobilize) for using Readability, Instapaper + Google Mobilizer
 - Integrated [News+ plugin](https://github.com/hrk/tt-rss-newsplus-plugin) for [News+](https://play.google.com/store/apps/details?id=com.noinnion.android.newsplus) on Android
 - Optional: Self-signed 2048-bit RSA TLS certificate for accessing TT-RSS via https
@@ -35,7 +38,7 @@ Just start up a new database container:
 Next, run the actual TT-RSS instance by doing a:
 
 ```bash
-# docker run -d --link $DB:db -p 80:80 --name ttrss x86dev/docker-ttrss
+# docker run -d --link $DB:db -p 80:8080 --name ttrss x86dev/docker-ttrss
 ```
 
 Running this command for the first time will download the image automatically.
@@ -57,12 +60,16 @@ Password: password
 
 Obviously, you're recommended to change those ASAP.
 
-## Enabling SSL/TLS support
 
-For enabling SSL/TLS support with a self-signed certificate you have to add `-e TTRSS_SSL_ENABLED=1`
+## Enabling SSL/TLS encryption support
+
+For enabling SSL/TLS support with a self-signed certificate you have to add `-e TTRSS_SSL_ENABLED=1 -p 443:4443`
 when running your TT-RSS container. Then you can access TT-RSS via: `https://<yourhost>`.
 
+**Warning: Running services unencrypted on the Internet is not recommended!**
+
 The container also has been successfully tested with Let's Encrypt certificates.
+
 
 ## Reverse proxy support
 
@@ -73,7 +80,7 @@ That way you easily can integrate your TT-RSS instance with an existing domain b
 (e.g. https://ttrss.yourdomain.com). In combination with an official Let's Encrypt certificate you
 can get a nice A+ encryption/security rating over at [SSLLabs](https://www.ssllabs.com/ssltest/).
 
-Never run your services unencrypted!
+**Never run your services unencrypted!**
 
 ## Installation walkthrough
 
@@ -85,6 +92,7 @@ While slightly more complicated at first, this gives your more freedom as to whi
 database instance and configuration you're relying on.
 Also, this makes this container quite disposable, as it doesn't store any sensitive
 information at all.
+
 
 ### Starting a database instance
 
@@ -175,14 +183,15 @@ When running this docker container you don't need to worry anymore how and when 
 update TT-RSS. Since TT-RSS has a so-called "rolling release" model since some time
 (which essentially means that there won't be any specific versions like 1.0, 1.1 etc),
 this container takes the burden any checks for updates of TT-RSS and the accompanied
-plugins/themes every day via an own update script (see `update-ttrss.sh`).
+plugins/themes every day via an own update script (see `root/srv/update-ttrss.sh`).
 
 By default the update script checks every 24 hours if there are updates for TT-RSS,
 the plugins or the theme(s) available. 
 
 If you want to change the update interval you just need to edit the file 
-`service-ttrss-update.conf` and change the `--wait-exit 24h` to fit your needs, whereas
+`root/etc/services.d/ttrss-updater/run` and change the `--wait-exit 24h` to fit your needs, whereas
 the suffix `h` stands for hours, `m` for minutes and `s` for seconds. 
+
 
 ### Want to contribute?
 
