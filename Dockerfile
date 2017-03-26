@@ -36,3 +36,5 @@ RUN set -xe && /srv/setup-ttrss.sh
 
 # clean up
 RUN set -xe && apk del --progress --purge && rm -rf /var/cache/apk/*
+
+ENTRYPOINT ["/init"]
