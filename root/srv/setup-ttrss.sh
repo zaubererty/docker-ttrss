@@ -55,6 +55,16 @@ setup_ttrss()
         git clone --depth=1 https://github.com/levito/tt-rss-feedly-theme.git ${TTRSS_PATH}/themes/feedly-git
     fi
 
+    mkdir -p /temp
+    git clone --depth=1 https://github.com/joshp23/ttrss-to-wallabag-v2.git /temp
+    mv /temp/wallabag_v2 ${TTRSS_PATH}/plugins/wallabag_v2
+    rm -Rf /temp 
+
+    mkdir -p /temp
+    git clone --depth=1 https://github.com/dasmurphy/tinytinyrss-fever-plugin.git /temp
+    mv /temp/fever ${TTRSS_PATH}/plugins/fever
+    rm -Rf /temp 
+
     # Add initial config.
     cp ${TTRSS_PATH}/config.php-dist ${TTRSS_PATH}/config.php
 
