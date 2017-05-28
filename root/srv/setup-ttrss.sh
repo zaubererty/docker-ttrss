@@ -57,7 +57,7 @@ setup_ttrss()
 
     mkdir -p /temp
     git clone --depth=1 https://github.com/joshp23/ttrss-to-wallabag-v2.git /temp
-    mv /temp/wallabag_v2 ${TTRSS_PATH}/plugins/wallabag_v2
+    mv /temp/wallabag_v2 ${TTRSS_PATH}/plugins.local/wallabag_v2
     rm -Rf /temp 
 
     mkdir -p /temp
