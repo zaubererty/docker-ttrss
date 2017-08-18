@@ -61,7 +61,7 @@ setup_ttrss()
     rm -Rf /temp 
 
     mkdir -p /temp
-    git clone --depth=1 https://github.com/dasmurphy/tinytinyrss-fever-plugin.git /temp
+    git clone --depth=1 https://github.com/ghzio/tinytinyrss-fever-plugin.git /temp
     mv /temp/fever ${TTRSS_PATH}/plugins/fever
     rm -Rf /temp 
 
